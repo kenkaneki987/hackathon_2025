@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitNation | SAI Khelo India</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="material-icons">fitness_center</span>
+                <span>FitNation</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#upload" class="nav-link active" data-page="upload">Upload</a>
+                <a href="#leaderboard" class="nav-link" data-page="leaderboard">Leaderboard</a>
+                <a href="#dashboard" class="nav-link" data-page="dashboard">Dashboard</a>
+            </div>
+            <div class="nav-toggle">
+                <span class="material-icons">menu</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Upload Page -->
+    <div id="upload-page" class="page active">
+        <div class="container">
+            <header class="page-header">
+                <h1>FitNation | SAI Khelo India</h1>
+                <p class="hero-text">Upload Your Fitness Test Video</p>
+            </header>
+
+            <div class="upload-section">
+                <div class="upload-box" id="uploadBox">
+                    <div class="upload-content">
+                        <span class="material-icons upload-icon">cloud_upload</span>
+                        <h3>Drag & Drop Your Video Here</h3>
+                        <p>or</p>
+                        <button class="btn btn-primary" id="chooseFileBtn">Choose File</button>
+                        <input type="file" id="fileInput" accept="video/mp4,video/mov" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="upload-info">
+                    <p class="supported-formats">Supported: High Jump, Push-ups, Sit-ups & more</p>
+                    <p class="file-types">Accepts MP4 / MOV files</p>
+                </div>
+            </div>
+
+            <div class="test-selector">
+                <label for="testType">Select Test Type:</label>
+                <select id="testType" class="form-select">
+                    <option value="">Choose your test...</option>
+                    <option value="high-jump">High Jump</option>
+                    <option value="sit-ups">Sit-ups</option>
+                    <option value="push-ups">Push-ups</option>
+                    <option value="sprint-50m">50m Sprint</option>
+                </select>
+            </div>
+
+            <button class="btn btn-submit" id="submitBtn">Submit Video</button>
+        </div>
+    </div>
+
+    <!-- Leaderboard Page -->
+    <div id="leaderboard-page" class="page">
+        <div class="container">
+            <header class="page-header">
+                <h1>National Leaderboard</h1>
+            </header>
+
+            <div class="filter-section">
+                <label for="testFilter">Filter by Test Type:</label>
+                <select id="testFilter" class="form-select">
+                    <option value="all">All Tests</option>
+                    <option value="high-jump">High Jump</option>
+                    <option value="sit-ups">Sit-ups</option>
+                    <option value="push-ups">Push-ups</option>
+                    <option value="sprint-50m">50m Sprint</option>
+                </select>
+            </div>
+
+            <div class="leaderboard-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>State</th>
+                            <th>Test</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr class="rank-1">
+                            <td><span class="rank-badge gold">1</span></td>
+                            <td>Aarav Sharma</td>
+                            <td>Delhi</td>
+                            <td>Push-ups</td>
+                            <td>45</td>
+                        </tr>
+                        <tr class="rank-2">
+                            <td><span class="rank-badge silver">2</span></td>
+                            <td>Kavya Nair</td>
+                            <td>Kerala</td>
+                            <td>Sit-ups</td>
+                            <td>52</td>
+                        </tr>
+                        <tr class="rank-3">
+                            <td><span class="rank-badge bronze">3</span></td>
+                            <td>Rohit Verma</td>
+                            <td>Maharashtra</td>
+                            <td>High Jump</td>
+                            <td>1.4m</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Priya Singh</td>
+                            <td>Punjab</td>
+                            <td>Push-ups</td>
+                            <td>42</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Arjun Patel</td>
+                            <td>Gujarat</td>
+                            <td>Sit-ups</td>
+                            <td>48</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Ananya Reddy</td>
+                            <td>Telangana</td>
+                            <td>High Jump</td>
+                            <td>1.3m</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Vikram Kumar</td>
+                            <td>Bihar</td>
+                            <td>50m Sprint</td>
+                            <td>6.2s</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Meera Joshi</td>
+                            <td>Rajasthan</td>
+                            <td>Push-ups</td>
+                            <td>38</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Government Dashboard Page -->
+    <div id="dashboard-page" class="page">
+        <div class="container">
+            <header class="page-header">
+                <h1>FitNation – SAI Dashboard</h1>
+                <p class="admin-subtitle">Nationwide Fitness Analytics</p>
+            </header>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <span class="material-icons">people</span>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Total Participants</h3>
+                        <p class="metric-value">12,847</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <span class="material-icons">fitness_center</span>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Avg Push-ups</h3>
+                        <p class="metric-value">32.5</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <span class="material-icons">trending_up</span>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Avg Sit-ups</h3>
+                        <p class="metric-value">28.7</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <span class="material-icons">height</span>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Avg High Jump</h3>
+                        <p class="metric-value">1.2m</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <div class="chart-card">
+                    <h3>State-wise Participation</h3>
+                    <div class="chart-placeholder">
+                        <div class="bar-chart">
+                            <div class="bar" style="height: 80%"><span>Delhi</span></div>
+                            <div class="bar" style="height: 70%"><span>Maharashtra</span></div>
+                            <div class="bar" style="height: 65%"><span>Kerala</span></div>
+                            <div class="bar" style="height: 60%"><span>Punjab</span></div>
+                            <div class="bar" style="height: 55%"><span>Gujarat</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-uploads">
+                <h3>Recent Uploads</h3>
+                <div class="uploads-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>State</th>
+                                <th>Test</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Rajesh Kumar</td>
+                                <td>Haryana</td>
+                                <td>Push-ups</td>
+                                <td>2024-01-15</td>
+                                <td><span class="status processing">Processing</span></td>
+                            </tr>
+                            <tr>
+                                <td>Sneha Gupta</td>
+                                <td>Uttar Pradesh</td>
+                                <td>Sit-ups</td>
+                                <td>2024-01-15</td>
+                                <td><span class="status completed">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Kiran Mehta</td>
+                                <td>Karnataka</td>
+                                <td>High Jump</td>
+                                <td>2024-01-14</td>
+                                <td><span class="status completed">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Ravi Singh</td>
+                                <td>West Bengal</td>
+                                <td>50m Sprint</td>
+                                <td>2024-01-14</td>
+                                <td><span class="status pending">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span class="material-icons">check_circle</span>
+        <span>Video uploaded – analysis coming soon!</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
