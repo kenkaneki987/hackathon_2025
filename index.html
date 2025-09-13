@@ -36,8 +36,15 @@
             </header>
 
             <div class="upload-section">
+                <!-- Upload Options Toggle -->
+                <div class="upload-options">
+                    <button class="option-btn active" id="uploadOption">Upload Video</button>
+                    <button class="option-btn" id="recordOption">Record Video</button>
+                </div>
+
+                <!-- Upload Box -->
                 <div class="upload-box" id="uploadBox">
-                    <div class="upload-content">
+                    <div class="upload-content" id="uploadContent">
                         <span class="material-icons upload-icon">cloud_upload</span>
                         <h3>Drag & Drop Your Video Here</h3>
                         <p>or</p>
@@ -45,10 +52,42 @@
                         <input type="file" id="fileInput" accept="video/mp4,video/mov" style="display: none;">
                     </div>
                 </div>
+
+                <!-- Camera Recording Box -->
+                <div class="camera-box" id="cameraBox" style="display: none;">
+                    <div class="camera-content">
+                        <video id="videoPreview" autoplay muted playsinline style="display: none;"></video>
+                        <canvas id="videoCanvas" style="display: none;"></canvas>
+                        
+                        <div class="camera-controls" id="cameraControls">
+                            <span class="material-icons camera-icon">videocam</span>
+                            <h3>Record Your Fitness Test</h3>
+                            <p>Click to start recording with your camera</p>
+                            <button class="btn btn-primary" id="startRecordBtn">Start Recording</button>
+                        </div>
+
+                        <div class="recording-controls" id="recordingControls" style="display: none;">
+                            <div class="recording-indicator">
+                                <div class="recording-dot"></div>
+                                <span>Recording...</span>
+                            </div>
+                            <div class="recording-timer" id="recordingTimer">00:00</div>
+                            <button class="btn btn-danger" id="stopRecordBtn">Stop Recording</button>
+                        </div>
+
+                        <div class="recorded-video" id="recordedVideo" style="display: none;">
+                            <video id="recordedVideoPreview" controls></video>
+                            <div class="recorded-actions">
+                                <button class="btn btn-primary" id="useRecordedBtn">Use This Video</button>
+                                <button class="btn btn-secondary" id="recordAgainBtn">Record Again</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="upload-info">
                     <p class="supported-formats">Supported: High Jump, Push-ups, Sit-ups & more</p>
-                    <p class="file-types">Accepts MP4 / MOV files</p>
+                    <p class="file-types">Accepts MP4 / MOV files or record directly</p>
                 </div>
             </div>
 

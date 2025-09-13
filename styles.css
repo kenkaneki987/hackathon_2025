@@ -138,6 +138,36 @@ body {
     margin-bottom: 40px;
 }
 
+/* Upload Options Toggle */
+.upload-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.option-btn {
+    padding: 12px 24px;
+    border: 2px solid #E2E8F0;
+    background: var(--white);
+    color: var(--gray);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-btn.active {
+    background: var(--saffron);
+    color: var(--white);
+    border-color: var(--saffron);
+}
+
+.option-btn:hover:not(.active) {
+    border-color: var(--saffron);
+    color: var(--saffron);
+}
+
 .upload-box {
     border: 3px dashed var(--gray);
     border-radius: var(--border-radius-lg);
@@ -191,6 +221,114 @@ body {
 .file-types {
     color: var(--gray);
     font-size: 0.9rem;
+}
+
+/* Camera Recording Styles */
+.camera-box {
+    border: 3px dashed var(--gray);
+    border-radius: var(--border-radius-lg);
+    padding: 40px 20px;
+    text-align: center;
+    background: var(--white);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.camera-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.camera-icon {
+    font-size: 4rem;
+    color: var(--saffron);
+}
+
+.camera-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+.camera-content p {
+    color: var(--gray);
+    font-size: 1.1rem;
+}
+
+#videoPreview {
+    width: 100%;
+    max-width: 500px;
+    height: 300px;
+    border-radius: var(--border-radius);
+    background: var(--dark-gray);
+}
+
+#recordedVideoPreview {
+    width: 100%;
+    max-width: 500px;
+    height: 300px;
+    border-radius: var(--border-radius);
+    background: var(--dark-gray);
+}
+
+.recording-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--error);
+    font-weight: 600;
+}
+
+.recording-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--error);
+    border-radius: 50%;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.recording-timer {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--error);
+    font-family: 'Courier New', monospace;
+}
+
+.recorded-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-danger {
+    background: var(--error);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background: #DC2626;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+    background: var(--gray);
+    color: var(--white);
+}
+
+.btn-secondary:hover {
+    background: #475569;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 /* Form Elements */

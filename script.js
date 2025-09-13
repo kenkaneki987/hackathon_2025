@@ -38,11 +38,35 @@ document.addEventListener('DOMContentLoaded', function() {
 // File upload functionality
 document.addEventListener('DOMContentLoaded', function() {
     const uploadBox = document.getElementById('uploadBox');
+    const cameraBox = document.getElementById('cameraBox');
     const fileInput = document.getElementById('fileInput');
     const chooseFileBtn = document.getElementById('chooseFileBtn');
     const submitBtn = document.getElementById('submitBtn');
     const testTypeSelect = document.getElementById('testType');
     const toast = document.getElementById('toast');
+    
+    // Upload/Record toggle
+    const uploadOption = document.getElementById('uploadOption');
+    const recordOption = document.getElementById('recordOption');
+    
+    // Camera elements
+    const videoPreview = document.getElementById('videoPreview');
+    const recordedVideoPreview = document.getElementById('recordedVideoPreview');
+    const cameraControls = document.getElementById('cameraControls');
+    const recordingControls = document.getElementById('recordingControls');
+    const recordedVideo = document.getElementById('recordedVideo');
+    const startRecordBtn = document.getElementById('startRecordBtn');
+    const stopRecordBtn = document.getElementById('stopRecordBtn');
+    const useRecordedBtn = document.getElementById('useRecordedBtn');
+    const recordAgainBtn = document.getElementById('recordAgainBtn');
+    const recordingTimer = document.getElementById('recordingTimer');
+    
+    // Camera recording variables
+    let mediaRecorder;
+    let recordedChunks = [];
+    let recordingStartTime;
+    let recordingInterval;
+    let currentStream;
     
     // Click to choose file
     chooseFileBtn.addEventListener('click', function() {
@@ -161,6 +185,162 @@ document.addEventListener('DOMContentLoaded', function() {
         fileInput.value = '';
         testTypeSelect.value = '';
     }
+    
+    // Upload/Record toggle functionality
+    uploadOption.addEventListener('click', function() {
+        uploadOption.classList.add('active');
+        recordOption.classList.remove('active');
+        uploadBox.style.display = 'block';
+        cameraBox.style.display = 'none';
+        stopCamera();
+    });
+    
+    recordOption.addEventListener('click', function() {
+        recordOption.classList.add('active');
+        uploadOption.classList.remove('active');
+        uploadBox.style.display = 'none';
+        cameraBox.style.display = 'block';
+        initializeCamera();
+    });
+    
+    // Camera functionality
+    async function initializeCamera() {
+        try {
+            currentStream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    facingMode: 'user'
+                }, 
+                audio: true 
+            });
+            
+            videoPreview.srcObject = currentStream;
+            videoPreview.style.display = 'block';
+            cameraControls.style.display = 'block';
+            recordingControls.style.display = 'none';
+            recordedVideo.style.display = 'none';
+            
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+            alert('Unable to access camera. Please check permissions and try again.');
+            // Fallback to upload option
+            uploadOption.click();
+        }
+    }
+    
+    function stopCamera() {
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+            currentStream = null;
+        }
+        videoPreview.style.display = 'none';
+        cameraControls.style.display = 'block';
+        recordingControls.style.display = 'none';
+        recordedVideo.style.display = 'none';
+    }
+    
+    // Start recording
+    startRecordBtn.addEventListener('click', function() {
+        if (!currentStream) {
+            alert('Camera not available. Please try again.');
+            return;
+        }
+        
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(currentStream, {
+            mimeType: 'video/webm;codecs=vp9'
+        });
+        
+        mediaRecorder.ondataavailable = function(event) {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+        
+        mediaRecorder.onstop = function() {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            recordedVideoPreview.src = url;
+            
+            // Show recorded video
+            cameraControls.style.display = 'none';
+            recordingControls.style.display = 'none';
+            recordedVideo.style.display = 'block';
+            videoPreview.style.display = 'none';
+        };
+        
+        mediaRecorder.start();
+        recordingStartTime = Date.now();
+        
+        // Show recording controls
+        cameraControls.style.display = 'none';
+        recordingControls.style.display = 'block';
+        
+        // Start timer
+        recordingInterval = setInterval(updateTimer, 1000);
+    });
+    
+    // Stop recording
+    stopRecordBtn.addEventListener('click', function() {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            clearInterval(recordingInterval);
+        }
+    });
+    
+    // Update recording timer
+    function updateTimer() {
+        const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        recordingTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // Use recorded video
+    useRecordedBtn.addEventListener('click', function() {
+        // Convert recorded video to file input
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        const file = new File([blob], 'recorded-video.webm', { type: 'video/webm' });
+        
+        // Create a data transfer object to simulate file selection
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+        
+        // Update UI to show file selected
+        const uploadContent = uploadBox.querySelector('.upload-content');
+        uploadContent.innerHTML = `
+            <span class="material-icons upload-icon">check_circle</span>
+            <h3>Video Recorded Successfully!</h3>
+            <p>Duration: ${recordingTimer.textContent}</p>
+            <button class="btn btn-primary" id="chooseFileBtn">Choose Different File</button>
+        `;
+        
+        // Re-attach event listener
+        document.getElementById('chooseFileBtn').addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        // Switch back to upload view
+        uploadOption.click();
+        showToast();
+    });
+    
+    // Record again
+    recordAgainBtn.addEventListener('click', function() {
+        cameraControls.style.display = 'block';
+        recordingControls.style.display = 'none';
+        recordedVideo.style.display = 'none';
+        videoPreview.style.display = 'block';
+    });
+    
+    // Clean up camera when page is hidden
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            stopCamera();
+        }
+    });
 });
 
 // Leaderboard filter functionality
