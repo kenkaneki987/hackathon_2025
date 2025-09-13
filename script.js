@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const useRecordedBtn = document.getElementById('useRecordedBtn');
     const recordAgainBtn = document.getElementById('recordAgainBtn');
     const recordingTimer = document.getElementById('recordingTimer');
+    const cameraSwitchBtn = document.getElementById('cameraSwitchBtn');
+    const cameraInfo = document.getElementById('cameraInfo');
     
     // Camera recording variables
     let mediaRecorder;
@@ -67,6 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let recordingStartTime;
     let recordingInterval;
     let currentStream;
+    let currentFacingMode = 'user'; // 'user' for front, 'environment' for back
+    let availableDevices = [];
+    let currentDeviceId = null;
     
     // Click to choose file
     chooseFileBtn.addEventListener('click', function() {
@@ -206,20 +211,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Camera functionality
     async function initializeCamera() {
         try {
-            currentStream = await navigator.mediaDevices.getUserMedia({ 
-                video: { 
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
-                    facingMode: 'user'
-                }, 
-                audio: true 
-            });
+            // Get available devices first
+            await getAvailableCameras();
             
-            videoPreview.srcObject = currentStream;
+            // Start with front camera by default
+            await startCamera('user');
+            
             videoPreview.style.display = 'block';
             cameraControls.style.display = 'block';
             recordingControls.style.display = 'none';
             recordedVideo.style.display = 'none';
+            
+            // Update camera info
+            updateCameraInfo();
             
         } catch (error) {
             console.error('Error accessing camera:', error);
@@ -228,6 +232,115 @@ document.addEventListener('DOMContentLoaded', function() {
             uploadOption.click();
         }
     }
+    
+    // Get available camera devices
+    async function getAvailableCameras() {
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            availableDevices = devices.filter(device => device.kind === 'videoinput');
+            console.log('Available cameras:', availableDevices);
+        } catch (error) {
+            console.error('Error getting camera devices:', error);
+            availableDevices = [];
+        }
+    }
+    
+    // Start camera with specific facing mode
+    async function startCamera(facingMode) {
+        try {
+            // Stop current stream if exists
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+            
+            const constraints = {
+                video: { 
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    facingMode: facingMode
+                }, 
+                audio: true 
+            };
+            
+            // If we have specific device IDs, try to use them
+            if (availableDevices.length > 1) {
+                if (facingMode === 'user') {
+                    const frontCamera = availableDevices.find(device => 
+                        device.label.toLowerCase().includes('front') || 
+                        device.label.toLowerCase().includes('user')
+                    );
+                    if (frontCamera) {
+                        constraints.video.deviceId = { exact: frontCamera.deviceId };
+                    }
+                } else {
+                    const backCamera = availableDevices.find(device => 
+                        device.label.toLowerCase().includes('back') || 
+                        device.label.toLowerCase().includes('rear') ||
+                        device.label.toLowerCase().includes('environment')
+                    );
+                    if (backCamera) {
+                        constraints.video.deviceId = { exact: backCamera.deviceId };
+                    }
+                }
+            }
+            
+            currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+            videoPreview.srcObject = currentStream;
+            currentFacingMode = facingMode;
+            
+        } catch (error) {
+            console.error('Error starting camera:', error);
+            throw error;
+        }
+    }
+    
+    // Update camera info display
+    function updateCameraInfo() {
+        const cameraType = currentFacingMode === 'user' ? 'front' : 'back';
+        const infoText = availableDevices.length > 1 ? 
+            `Using ${cameraType} camera` : 
+            'Using camera';
+        
+        cameraInfo.innerHTML = `
+            <span class="material-icons">info</span>
+            <span>${infoText}</span>
+        `;
+        
+        // Show/hide switch button based on available cameras
+        cameraSwitchBtn.style.display = availableDevices.length > 1 ? 'flex' : 'none';
+    }
+    
+    // Switch camera
+    cameraSwitchBtn.addEventListener('click', async function() {
+        if (availableDevices.length <= 1) {
+            alert('Only one camera available on this device');
+            return;
+        }
+        
+        try {
+            // Show loading state
+            this.disabled = true;
+            const originalContent = this.innerHTML;
+            this.innerHTML = '<span class="material-icons">refresh</span>';
+            
+            // Switch to opposite camera
+            const newFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            await startCamera(newFacingMode);
+            updateCameraInfo();
+            
+            // Restore button
+            this.innerHTML = originalContent;
+            this.disabled = false;
+            
+        } catch (error) {
+            console.error('Error switching camera:', error);
+            alert('Unable to switch camera. Please try again.');
+            
+            // Restore button
+            this.innerHTML = '<span class="material-icons">flip_camera_ios</span>';
+            this.disabled = false;
+        }
+    });
     
     function stopCamera() {
         if (currentStream) {

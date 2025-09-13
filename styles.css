@@ -241,6 +241,58 @@ body {
     gap: 20px;
 }
 
+.camera-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.camera-switch-btn {
+    background: var(--white);
+    border: 2px solid var(--saffron);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.camera-switch-btn:hover {
+    background: var(--saffron);
+    transform: scale(1.1);
+}
+
+.camera-switch-btn:hover .material-icons {
+    color: var(--white);
+}
+
+.camera-switch-btn .material-icons {
+    color: var(--saffron);
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.camera-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--light-gray);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.camera-info .material-icons {
+    font-size: 1rem;
+    color: var(--saffron);
+}
+
 .camera-icon {
     font-size: 4rem;
     color: var(--saffron);
@@ -667,6 +719,20 @@ body {
     
     .upload-icon {
         font-size: 3rem;
+    }
+    
+    .camera-switch-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .camera-switch-btn .material-icons {
+        font-size: 1.3rem;
+    }
+    
+    .camera-info {
+        font-size: 0.8rem;
+        padding: 6px 12px;
     }
     
     .metrics-grid {

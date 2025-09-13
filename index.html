@@ -60,9 +60,18 @@
                         <canvas id="videoCanvas" style="display: none;"></canvas>
                         
                         <div class="camera-controls" id="cameraControls">
-                            <span class="material-icons camera-icon">videocam</span>
+                            <div class="camera-header">
+                                <span class="material-icons camera-icon">videocam</span>
+                                <button class="camera-switch-btn" id="cameraSwitchBtn" title="Switch Camera">
+                                    <span class="material-icons">flip_camera_ios</span>
+                                </button>
+                            </div>
                             <h3>Record Your Fitness Test</h3>
                             <p>Click to start recording with your camera</p>
+                            <div class="camera-info" id="cameraInfo">
+                                <span class="material-icons">info</span>
+                                <span>Using front camera</span>
+                            </div>
                             <button class="btn btn-primary" id="startRecordBtn">Start Recording</button>
                         </div>
 
